@@ -1,0 +1,269 @@
+﻿using SapphireActorCapture.Models;
+using SapphireActorCapture.Packets;
+using SapphireActorCapture.Packets.Receive;
+using SapphireActorCapture.Packets.Send;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using MySql.Data.MySqlClient;
+using System.Windows.Forms;
+using System.IO;
+using System.Xml;
+
+namespace SapphireActorCapture
+{
+    class PacketProcessor
+    {
+        public enum PPType
+        {
+            Recv,
+            Send
+        }
+
+        MySqlConnection dbconnection;
+
+        private int currentZone = 0;
+
+        private string outputFolderName;
+
+        public PacketProcessor()
+        {
+            if (Globals.DB){
+                string connectionString = $"SERVER={Globals.dbhost};DATABASE={Globals.dbname};UID={Globals.dbuser};PASSWORD={Globals.dbpwd};";
+
+                dbconnection = new MySqlConnection(connectionString);
+                dbconnection.Open();
+                Console.WriteLine("PacketProcessor: Connected to database, " + connectionString);
+            }         
+
+            if (Globals.xmlOutput)
+            {
+                string datetime = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
+
+                try
+                {
+                    if (!Directory.Exists(Path.Combine("output", datetime)))
+                        Directory.CreateDirectory(Path.Combine("output", datetime));
+                }catch(Exception exc)
+                {
+                    Console.WriteLine("Could not setup output folder!\n" + exc);
+                    Environment.Exit(0);
+                }
+
+                outputFolderName = Path.Combine("output", datetime);
+            }
+        }
+
+        public void ProcessPacket(BasePacket packet, PPType type)
+        {
+            if (packet.header.isCompressed == 0x01)
+                BasePacket.DecompressPacket(ref packet);
+
+            List<SubPacket> subPackets = packet.GetSubpackets();
+            foreach (SubPacket subpacket in subPackets)
+            {
+                //Normal Game Opcode
+                if (subpacket.header.type == 0x03)
+                {
+                    switch (type)
+                    {
+                        case PPType.Recv: HandleRecv(subpacket);
+                            break;
+                        case PPType.Send: HandleSend(subpacket);
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void HandleRecv(SubPacket subpacket)
+        {
+            switch (subpacket.gameMessage.opcode)
+            {
+                /* SERVER OPCODES */
+
+                case 0x190: /* ACTOR_SPAWN */
+                    Console.WriteLine("\n-> ACTOR_SPAWN");
+                    ActorSpawnPacket actorSpawnPacket = new ActorSpawnPacket(subpacket.data, currentZone, subpacket.header.sourceId);
+
+                    switch (actorSpawnPacket.type)
+                    {
+                        case 1:
+                            if (actorSpawnPacket.spawnIndex == 0)
+                            {
+                                Console.WriteLine($"    -> OWN CHARACTER: {new string(actorSpawnPacket.name)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+                                System.Threading.Thread.Sleep(100);
+
+                                /* replaced with init_zone
+                                currentZone = Memory.ReadZoneId();
+                                Console.WriteLine($"    -> New Zone: {currentZone} - {exdreader.GetTerritoryName(currentZone)}");
+                                */
+                            }
+                            else
+                            {
+                                Console.WriteLine($"    -> CHARACTER: {new string(actorSpawnPacket.name)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+                            }
+                            break;
+                        case 0:
+                            Console.WriteLine($"    -> EMPTY: {new string(actorSpawnPacket.name)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+                            break;
+                        default:
+                            Console.WriteLine($"    -> NPC({actorSpawnPacket.nameId}): {Globals.exdreader.GetBnpcName(actorSpawnPacket.nameId)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+
+                            if (Globals.UI)
+                            {
+                                Globals.mapviewform.BeginInvoke((MethodInvoker)delegate () {
+                                    Globals.mapviewform.addActor(actorSpawnPacket);
+                                    Globals.mapviewform.invalidateMap();
+                                });
+                            }
+
+                            if (Globals.xmlOutput & currentZone != 0 & !actorSpawnPacket.invalidPacket)
+                            {
+                                using (XmlWriter writer = XmlWriter.Create(Path.Combine(outputFolderName, $"{subpacket.header.sourceId}.mobdef.xml")))
+                                {
+                                    writer.WriteStartDocument();
+                                    writer.WriteStartElement("Mob");
+
+                                    writer.WriteElementString("ID", subpacket.header.sourceId.ToString());
+                                    writer.WriteElementString("ZoneId", currentZone.ToString());
+                                    writer.WriteElementString("Type", actorSpawnPacket.type.ToString());
+                                    writer.WriteElementString("NameId", actorSpawnPacket.nameId.ToString());
+                                    writer.WriteElementString("SizeId", actorSpawnPacket.sizeId.ToString());
+                                    writer.WriteElementString("ModelId", actorSpawnPacket.model.ToString());
+                                    writer.WriteElementString("ClassJob", actorSpawnPacket.classJob.ToString());
+                                    writer.WriteElementString("DisplayFlags1", actorSpawnPacket.displayFlags1.ToString());
+                                    writer.WriteElementString("DisplayFlags2", actorSpawnPacket.displayFlags2.ToString());
+                                    writer.WriteElementString("Level", actorSpawnPacket.level.ToString());
+                                    writer.WriteElementString("Pos_0_0", actorSpawnPacket.posx.ToString());
+                                    writer.WriteElementString("Pos_0_1", actorSpawnPacket.posy.ToString());
+                                    writer.WriteElementString("Pos_0_2", actorSpawnPacket.posz.ToString());
+                                    writer.WriteElementString("Rotation", actorSpawnPacket.rotation.ToString());
+                                    writer.WriteElementString("MobType", actorSpawnPacket.mobType.ToString());
+                                    writer.WriteElementString("ModelMainWeapon", actorSpawnPacket.mainWeaponModel.ToString());
+                                    writer.WriteElementString("ModelSubWeapon", actorSpawnPacket.secWeaponModel.ToString());
+                                    writer.WriteElementString("Look", BitConverter.ToString(actorSpawnPacket.lookdata).Replace("-", " "));
+                                    writer.WriteElementString("Models", BitConverter.ToString(actorSpawnPacket.models).Replace("-", " "));
+
+                                    writer.WriteEndElement();
+                                    writer.WriteEndDocument();
+
+                                    Console.WriteLine($"    -> wrote " + $"{subpacket.header.sourceId}.mobdef.xml");
+                                }
+                            }
+                            else
+                            {
+                                if (Globals.xmlOutput)
+                                    Console.WriteLine($"    -> currentZone==0(change your zone once to fix) or invalid packet");
+                            }
+
+                            if (Globals.DB & currentZone != 0 & !actorSpawnPacket.invalidPacket)
+                            {
+                                using (MySqlCommand command = new MySqlCommand())
+                                {
+                                    command.Connection = dbconnection;
+                                    command.CommandText = "INSERT INTO dbbattlenpc (Id, ZoneId, Type, NameId, SizeId, ModelId, ClassJob, DisplayFlags1, DisplayFlags2, Level, Pos_0_0, Pos_0_1, Pos_0_2, Rotation, MobType, Behaviour, ModelMainWeapon, ModelSubWeapon, Look, Models) VALUES (?Id, ?ZoneId, ?Type, ?NameId, ?SizeId, ?ModelId, ?ClassJob, ?DisplayFlags1, ?DisplayFlags2, ?Level, ?Pos_0_0, ?Pos_0_1, ?Pos_0_2, ?Rotation, ?MobType, ?Behaviour, ?ModelMainWeapon, ?ModelSubWeapon, ?Look, ?Models);";
+                                    List<MySqlParameter> parameters = new List<MySqlParameter>();
+                                    parameters.Add(new MySqlParameter("?Id", MySqlDbType.Int32, 11));
+                                    parameters[0].Value = subpacket.header.sourceId;
+                                    parameters.Add(new MySqlParameter("?ZoneId", MySqlDbType.Int32, 10));
+                                    parameters[1].Value = currentZone;
+                                    parameters.Add(new MySqlParameter("?Type", MySqlDbType.Int32, 11));
+                                    parameters[2].Value = actorSpawnPacket.type;
+                                    parameters.Add(new MySqlParameter("?NameId", MySqlDbType.Int32, 10));
+                                    parameters[3].Value = actorSpawnPacket.nameId;
+                                    parameters.Add(new MySqlParameter("?SizeId", MySqlDbType.Int32, 10));
+                                    parameters[4].Value = actorSpawnPacket.sizeId;
+                                    parameters.Add(new MySqlParameter("?ModelId", MySqlDbType.Int32, 10));
+                                    parameters[5].Value = actorSpawnPacket.model;
+                                    parameters.Add(new MySqlParameter("?ClassJob", MySqlDbType.Int32, 3));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.classJob;
+                                    parameters.Add(new MySqlParameter("?DisplayFlags1", MySqlDbType.Int32, 3));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.displayFlags1;
+                                    parameters.Add(new MySqlParameter("?DisplayFlags2", MySqlDbType.Int32, 3));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.displayFlags2;
+                                    parameters.Add(new MySqlParameter("?Level", MySqlDbType.Int32, 3));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.level;
+                                    parameters.Add(new MySqlParameter("?Pos_0_0", MySqlDbType.Float));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.posx;
+                                    parameters.Add(new MySqlParameter("?Pos_0_1", MySqlDbType.Float));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.posy;
+                                    parameters.Add(new MySqlParameter("?Pos_0_2", MySqlDbType.Float));
+                                    parameters[parameters.Count - 1].Value = /*System.BitConverter.ToSingle(actorSpawnPacket.posz, 0);*/ actorSpawnPacket.posz;
+                                    parameters.Add(new MySqlParameter("?Rotation", MySqlDbType.Int32, 10));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.rotation;
+                                    parameters.Add(new MySqlParameter("?MobType", MySqlDbType.Int32, 3));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.mobType;
+                                    parameters.Add(new MySqlParameter("?Behaviour", MySqlDbType.Int32, 3));
+                                    parameters[parameters.Count - 1].Value = 0; //?
+                                    parameters.Add(new MySqlParameter("?ModelMainWeapon", MySqlDbType.Int32, 20));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.mainWeaponModel;
+                                    parameters.Add(new MySqlParameter("?ModelSubWeapon", MySqlDbType.Int32, 20));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.secWeaponModel;
+                                    parameters.Add(new MySqlParameter("?Look", MySqlDbType.Blob, actorSpawnPacket.lookdata.Length));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.lookdata;
+                                    parameters.Add(new MySqlParameter("?Models", MySqlDbType.Blob, actorSpawnPacket.models.Length));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.models;
+
+                                    foreach (MySqlParameter parameter in parameters)
+                                        command.Parameters.Add(parameter);
+
+                                    try
+                                    {
+                                        command.Prepare();
+                                        command.ExecuteNonQuery();
+                                        Console.WriteLine(command.CommandText);
+                                    }catch(Exception exc)
+                                    {
+                                        Console.WriteLine($"    -> Error writing to DB: " + exc.Message);
+                                    }
+
+
+                                }
+                            }
+                            else
+                            {
+                                if(Globals.DB)
+                                    Console.WriteLine($"    -> currentZone==0(change your zone once to fix) or invalid packet");
+                            }
+                            break;
+                    }
+                    break;
+                case 0x19A: /* INIT_ZONE */
+                    Console.WriteLine("\n-> INIT_ZONE");
+                    InitZonePacket initZonePacket = new InitZonePacket(subpacket.data);
+
+                    currentZone = Convert.ToInt32(initZonePacket.zoneId);
+
+                    if (Globals.UI)
+                    {
+                        Globals.mapviewform.BeginInvoke((MethodInvoker)delegate () { Globals.mapviewform.SetMapWithId(currentZone, 00); });
+                    }
+                    
+                    Console.WriteLine($"    -> New Zone({initZonePacket.zoneId}): {Globals.exdreader.GetTerritoryName(currentZone)}      EntryLength:{subpacket.data.Length}");
+                    break;
+            }
+        }
+
+        private void HandleSend(SubPacket subpacket)
+        {
+            switch (subpacket.gameMessage.opcode)
+            {
+                case 0x10d: /* POS_UPDATE */
+                    Console.WriteLine("-> POS_UPDATE");
+                    UpdatePlayerPositionPacket pospacket = new UpdatePlayerPositionPacket(subpacket.data);
+
+                    Console.WriteLine($"    -> {pospacket.x} {pospacket.y} {pospacket.z}");
+
+                    if (Globals.UI)
+                    {
+                        Globals.mapviewform.BeginInvoke((MethodInvoker)delegate () {
+                            Globals.mapviewform.setPos(Convert.ToInt32(pospacket.x), Convert.ToInt32(pospacket.y));
+                            Globals.mapviewform.invalidateMap();
+                        });
+                    }
+                    break;
+            }
+        }
+    }
+}
