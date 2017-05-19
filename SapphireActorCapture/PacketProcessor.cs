@@ -102,6 +102,16 @@ namespace SapphireActorCapture
                             else
                             {
                                 Console.WriteLine($"    -> CHARACTER: {new string(actorSpawnPacket.name)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+
+                                if (Globals.xmlOutput & Globals.writeChars & currentZone != 0 & !actorSpawnPacket.invalidPacket)
+                                {
+                                    ActorXmlWriter.writeChar(actorSpawnPacket, subpacket.header.sourceId, currentZone, outputFolderName);
+                                }
+                                else
+                                {
+                                    if (Globals.xmlOutput)
+                                        Console.WriteLine($"    -> currentZone==0(change your zone once to fix) or invalid packet");
+                                }
                             }
                             break;
                         case 0:
@@ -120,36 +130,7 @@ namespace SapphireActorCapture
 
                             if (Globals.xmlOutput & currentZone != 0 & !actorSpawnPacket.invalidPacket)
                             {
-                                using (XmlWriter writer = XmlWriter.Create(Path.Combine(outputFolderName, $"{subpacket.header.sourceId}.mobdef.xml")))
-                                {
-                                    writer.WriteStartDocument();
-                                    writer.WriteStartElement("Mob");
-
-                                    writer.WriteElementString("ID", subpacket.header.sourceId.ToString());
-                                    writer.WriteElementString("ZoneId", currentZone.ToString());
-                                    writer.WriteElementString("Type", actorSpawnPacket.type.ToString());
-                                    writer.WriteElementString("NameId", actorSpawnPacket.nameId.ToString());
-                                    writer.WriteElementString("SizeId", actorSpawnPacket.sizeId.ToString());
-                                    writer.WriteElementString("ModelId", actorSpawnPacket.model.ToString());
-                                    writer.WriteElementString("ClassJob", actorSpawnPacket.classJob.ToString());
-                                    writer.WriteElementString("DisplayFlags1", actorSpawnPacket.displayFlags1.ToString());
-                                    writer.WriteElementString("DisplayFlags2", actorSpawnPacket.displayFlags2.ToString());
-                                    writer.WriteElementString("Level", actorSpawnPacket.level.ToString());
-                                    writer.WriteElementString("Pos_0_0", actorSpawnPacket.posx.ToString());
-                                    writer.WriteElementString("Pos_0_1", actorSpawnPacket.posy.ToString());
-                                    writer.WriteElementString("Pos_0_2", actorSpawnPacket.posz.ToString());
-                                    writer.WriteElementString("Rotation", actorSpawnPacket.rotation.ToString());
-                                    writer.WriteElementString("MobType", actorSpawnPacket.mobType.ToString());
-                                    writer.WriteElementString("ModelMainWeapon", actorSpawnPacket.mainWeaponModel.ToString());
-                                    writer.WriteElementString("ModelSubWeapon", actorSpawnPacket.secWeaponModel.ToString());
-                                    writer.WriteElementString("Look", BitConverter.ToString(actorSpawnPacket.lookdata).Replace("-", " "));
-                                    writer.WriteElementString("Models", BitConverter.ToString(actorSpawnPacket.models).Replace("-", " "));
-
-                                    writer.WriteEndElement();
-                                    writer.WriteEndDocument();
-
-                                    Console.WriteLine($"    -> wrote " + $"{subpacket.header.sourceId}.mobdef.xml");
-                                }
+                                ActorXmlWriter.writeMob(actorSpawnPacket, subpacket.header.sourceId, currentZone, outputFolderName);
                             }
                             else
                             {
@@ -189,7 +170,7 @@ namespace SapphireActorCapture
                                     parameters.Add(new MySqlParameter("?Pos_0_1", MySqlDbType.Float));
                                     parameters[parameters.Count - 1].Value = actorSpawnPacket.posy;
                                     parameters.Add(new MySqlParameter("?Pos_0_2", MySqlDbType.Float));
-                                    parameters[parameters.Count - 1].Value = /*System.BitConverter.ToSingle(actorSpawnPacket.posz, 0);*/ actorSpawnPacket.posz;
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.posz;
                                     parameters.Add(new MySqlParameter("?Rotation", MySqlDbType.Int32, 10));
                                     parameters[parameters.Count - 1].Value = actorSpawnPacket.rotation;
                                     parameters.Add(new MySqlParameter("?MobType", MySqlDbType.Int32, 3));
