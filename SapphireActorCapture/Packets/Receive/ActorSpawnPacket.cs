@@ -62,13 +62,13 @@ namespace SapphireActorCapture.Packets.Receive
         public readonly Byte mountFeet;
         public readonly Int32 mountColor;
         public readonly Int32 unknown_236;
-        public readonly char[] name = new char[32];
+        public readonly string name;
         public readonly byte[] lookdata = new byte[28];
         public readonly byte[] models = new byte[40];
         public readonly float posx;
         public readonly float posy;
         public readonly float posz;
-        public readonly char[] fcTag = new char[100];
+        public readonly string fcTag;
         public readonly byte[] unknown_250 = new byte[10];
         public readonly int territoryId = 0;
         public readonly uint id = 0;
@@ -138,13 +138,13 @@ namespace SapphireActorCapture.Packets.Receive
                         mountFeet = binReader.ReadByte();
                         mountColor = binReader.ReadInt32();
                         unknown_236 = binReader.ReadInt32();
-                        name = binReader.ReadChars(32);
+                        name = Encoding.ASCII.GetString(binReader.ReadBytes(32)).TrimEnd('\x00');
                         lookdata = binReader.ReadBytes(28);
                         models = binReader.ReadBytes(40);
                         posx = binReader.ReadSingle();
                         posy = binReader.ReadSingle();
                         posz = binReader.ReadSingle();
-                        fcTag = binReader.ReadChars(6);
+                        fcTag = Encoding.ASCII.GetString(binReader.ReadBytes(6)).TrimEnd('\x00');
                         unknown_250 = binReader.ReadBytes(10);
                         binReader.ReadBytes(22); //?
                     }

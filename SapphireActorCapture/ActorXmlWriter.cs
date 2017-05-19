@@ -14,7 +14,12 @@ namespace SapphireActorCapture
     {
         public static void writeMob(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFolderName)
         {
-            using (XmlWriter writer = XmlWriter.Create(Path.Combine(outputFolderName, $"{sourceId}.mobdef.xml")))
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "     ";
+            settings.NewLineOnAttributes = false;
+
+            using (XmlWriter writer = XmlWriter.Create(Path.Combine(outputFolderName, $"{sourceId}.mobdef.xml"), settings))
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Mob");
@@ -48,7 +53,12 @@ namespace SapphireActorCapture
 
         public static void writeChar(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFolderName) //TODO: actually make this write things related to characters
         {
-            using (XmlWriter writer = XmlWriter.Create(Path.Combine(outputFolderName, $"{sourceId}.chardef.xml")))
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "     ";
+            settings.NewLineOnAttributes = false;
+
+            using (XmlWriter writer = XmlWriter.Create(Path.Combine(outputFolderName, $"{sourceId}.chardef.xml"), settings))
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Mob");

@@ -22,7 +22,7 @@ namespace SapphireActorCapture
             var options = new OptionSet() {
         { "i|ui", "Enable UI",
             v => Globals.UI = v != null },
-        { "c|characters", "Write characters to database",
+        { "c|characters", "Write characters",
             v => Globals.writeChars = v != null },
         { "d|db", "Connect to a database",
             v => Globals.DB = v != null },

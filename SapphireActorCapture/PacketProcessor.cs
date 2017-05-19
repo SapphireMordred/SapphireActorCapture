@@ -91,7 +91,7 @@ namespace SapphireActorCapture
                         case 1:
                             if (actorSpawnPacket.spawnIndex == 0)
                             {
-                                Console.WriteLine($"    -> OWN CHARACTER: {new string(actorSpawnPacket.name)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+                                Console.WriteLine($"    -> OWN CHARACTER: {actorSpawnPacket.name}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
                                 System.Threading.Thread.Sleep(100);
 
                                 /* replaced with init_zone
@@ -101,7 +101,7 @@ namespace SapphireActorCapture
                             }
                             else
                             {
-                                Console.WriteLine($"    -> CHARACTER: {new string(actorSpawnPacket.name)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+                                Console.WriteLine($"    -> CHARACTER: {actorSpawnPacket.name}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
 
                                 if (Globals.xmlOutput & Globals.writeChars & currentZone != 0 & !actorSpawnPacket.invalidPacket)
                                 {
@@ -109,13 +109,13 @@ namespace SapphireActorCapture
                                 }
                                 else
                                 {
-                                    if (Globals.xmlOutput)
+                                    if (Globals.writeChars)
                                         Console.WriteLine($"    -> currentZone==0(change your zone once to fix) or invalid packet");
                                 }
                             }
                             break;
                         case 0:
-                            Console.WriteLine($"    -> EMPTY: {new string(actorSpawnPacket.name)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+                            Console.WriteLine($"    -> EMPTY: {actorSpawnPacket.name}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
                             break;
                         default:
                             Console.WriteLine($"    -> NPC({actorSpawnPacket.nameId}): {Globals.exdreader.GetBnpcName(actorSpawnPacket.nameId)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
