@@ -2,7 +2,6 @@
 using SapphireActorCapture.Packets;
 using SapphireActorCapture.Packets.Receive;
 using SapphireActorCapture.Packets.Send;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -222,6 +221,17 @@ namespace SapphireActorCapture
                     }
                     
                     Console.WriteLine($"    -> New Zone({initZonePacket.zoneId}): {Globals.exdreader.GetTerritoryName(currentZone)}      EntryLength:{subpacket.data.Length}");
+                    break;
+
+                case 0x146: /* EFFECT */
+                    Console.WriteLine("\n-> EFFECT");
+                    EffectPacket effectPacket = new EffectPacket(subpacket.data);
+
+                    Console.WriteLine($"    -> ACTION: {Globals.exdreader.GetActionName((int)effectPacket.actionTextId)}   SourceId:{subpacket.header.sourceId}   TargetId:{subpacket.header.targetId}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
+
+                    if (Globals.xmlOutput)
+                        ActorXmlWriter.addEffect(effectPacket, subpacket.header.sourceId, outputFolderName);
+
                     break;
             }
         }

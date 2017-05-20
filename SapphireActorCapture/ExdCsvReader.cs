@@ -12,6 +12,7 @@ namespace SapphireActorCapture
     {
         private List<string> bnpcnames = new List<string>();
         private List<string> placenames = new List<string>();
+        private List<string> actionnames = new List<string>();
         private List<Territory> territories = new List<Territory>();
         private List<Map> maps = new List<Map>();
 
@@ -163,9 +164,33 @@ namespace SapphireActorCapture
                         maps.Add(new Map(mapMarkerRange, identifier, sizeFactor, placeNameRegion, placeNameSub, territoryType, hierarchy, placeName));
                     }
                     Console.WriteLine($"ExdCsvReader: {rowCount} maps read");
-
                 }
-            }catch(Exception exc)
+
+                using (TextFieldParser parser = new TextFieldParser(@"exd\action_0.exh_en.csv"))
+                {
+                    parser.TextFieldType = FieldType.Delimited;
+                    parser.SetDelimiters(",");
+                    int rowCount = 0;
+                    while (!parser.EndOfData)
+                    {
+                        //Processing row
+                        rowCount++;
+                        string[] fields = parser.ReadFields();
+                        int fCount = 0;
+                        foreach (string field in fields)
+                        {
+                            fCount++;
+
+                            if (fCount == 2)
+                            {
+                                actionnames.Add(field);
+                            }
+                        }
+                    }
+                    Console.WriteLine($"ExdCsvReader: {rowCount} actionnames read");
+                }
+            }
+            catch(Exception exc)
             {
                 Console.WriteLine("ExdCsvReader: failed to parse CSV, continuing anyways\n"+exc);
             }
@@ -287,6 +312,18 @@ namespace SapphireActorCapture
             try
             {
                 return placenames[id + 1];
+            }
+            catch
+            {
+                return "Unknown";
+            }
+        }
+
+        public string GetActionName(int id)
+        {
+            try
+            {
+                return actionnames[id + 1];
             }
             catch
             {
