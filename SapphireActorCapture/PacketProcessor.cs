@@ -82,6 +82,11 @@ namespace SapphireActorCapture
                 /* SERVER OPCODES */
 
                 case 0x190: /* ACTOR_SPAWN */
+                    if (Globals.memory)
+                    {
+                        currentZone = Memory.getZoneId();
+                    }
+
                     Console.WriteLine("\n-> ACTOR_SPAWN");
                     ActorSpawnPacket actorSpawnPacket = new ActorSpawnPacket(subpacket.data, currentZone, subpacket.header.sourceId);
 

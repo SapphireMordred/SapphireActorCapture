@@ -18,6 +18,9 @@ namespace SapphireActorCapture
         public static bool xmlOutput = false;
         public static bool writeChars = false;
         public static bool UI = false;
+        public static bool memory = false;
+
+        public static int ffxivPid = -1;
 
         public static ExdCsvReader exdreader;
         public static MapViewForm mapviewform;

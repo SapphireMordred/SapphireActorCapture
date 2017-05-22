@@ -24,6 +24,8 @@ namespace SapphireActorCapture
             v => Globals.UI = v != null },
         { "c|characters", "Write characters",
             v => Globals.writeChars = v != null },
+        { "m|memory", "Read info from memory(use this if normal reading fails on zoning) - this might not work on your current ffxiv version",
+            v => Globals.memory = v != null },
         { "d|db", "Connect to a database",
             v => Globals.DB = v != null },
         { "x|xml", "Write to mobdef XMLs",
@@ -101,6 +103,8 @@ namespace SapphireActorCapture
                     Console.ReadLine();
                     return;
                 }
+
+                Globals.ffxivPid = pid;
 
                 Console.WriteLine("Main: PID: {0}, injecting", pid);
 

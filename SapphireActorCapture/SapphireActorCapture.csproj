@@ -71,6 +71,7 @@
     <Compile Include="ActorXmlWriter.cs" />
     <Compile Include="ExdCsvReader.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="Memory.cs" />
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\Territory.cs" />
     <Compile Include="PacketProcessor.cs" />
