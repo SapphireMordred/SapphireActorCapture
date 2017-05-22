@@ -191,7 +191,7 @@ namespace SapphireActorCapture
                     Console.WriteLine($"ExdCsvReader: {rowCount} actionnames read");
                 }
 
-                using (TextFieldParser parser = new TextFieldParser(@"exd\fate.exh_de.csv"))
+                using (TextFieldParser parser = new TextFieldParser(@"exd\fate.exh_en.csv"))
                 {
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
