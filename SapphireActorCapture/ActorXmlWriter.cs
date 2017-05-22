@@ -42,6 +42,7 @@ namespace SapphireActorCapture
                 writer.WriteElementString("NameId", actorSpawnPacket.nameId.ToString());
                 writer.WriteElementString("SizeId", actorSpawnPacket.sizeId.ToString());
                 writer.WriteElementString("ModelId", actorSpawnPacket.model.ToString());
+                writer.WriteElementString("FateId", actorSpawnPacket.fateId.ToString());
                 writer.WriteElementString("ClassJob", actorSpawnPacket.classJob.ToString());
                 writer.WriteElementString("DisplayFlags1", actorSpawnPacket.displayFlags1.ToString());
                 writer.WriteElementString("DisplayFlags2", actorSpawnPacket.displayFlags2.ToString());
@@ -67,7 +68,7 @@ namespace SapphireActorCapture
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
 
-                Console.WriteLine($"    -> wrote " + $"{sourceId}.mobdef.xml");
+                Console.WriteLine($"    -> wrote {sourceId}.mobdef.xml");
             }
         }
 
@@ -120,7 +121,7 @@ namespace SapphireActorCapture
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
 
-                Console.WriteLine($"    -> wrote " + $"{sourceId}.chardef.xml");
+                Console.WriteLine($"    -> wrote {sourceId}.chardef.xml");
             }
         }
 
@@ -128,7 +129,7 @@ namespace SapphireActorCapture
         {
             if (!File.Exists(Path.Combine(outputFolderName, $"{sourceId}.mobdef.xml")))
             {
-                Console.WriteLine($"    -> Definition file " + $"{sourceId}.mobdef.xml not found");
+                Console.WriteLine($"    -> Definition file {sourceId}.mobdef.xml not found");
                 return;
             }
             
@@ -177,7 +178,7 @@ namespace SapphireActorCapture
                 Console.WriteLine($"    -> writing failed: " + exc);
             }
 
-            Console.WriteLine($"    -> updated " + $"{sourceId}.mobdef.xml");
+            Console.WriteLine($"    -> updated {sourceId}.mobdef.xml");
         }
     }
 }

@@ -18,7 +18,7 @@ namespace SapphireActorCapture.Packets.Receive
         public readonly Int32 ownerId;
         public readonly Int32[] unknown_E = new Int32[2];
         public readonly Int64 targetId;
-        public readonly Int32 unknown_48;
+        public readonly Int32 fateId;
         public readonly Byte unknown_2C;
         public readonly Byte spawnIndex;
         public readonly Byte status;
@@ -73,7 +73,6 @@ namespace SapphireActorCapture.Packets.Receive
         public readonly int territoryId = 0;
         public readonly uint id = 0;
         
-
         public ActorSpawnPacket(byte[] buffer, int territoryId, uint id)
         {
             this.territoryId = territoryId;
@@ -94,7 +93,7 @@ namespace SapphireActorCapture.Packets.Receive
                         unknown_E[0] = binReader.ReadInt32();
                         unknown_E[1] = binReader.ReadInt32();
                         targetId = binReader.ReadInt64();
-                        unknown_48 = binReader.ReadInt32();
+                        fateId = binReader.ReadInt32();
                         unknown_2C = binReader.ReadByte();
                         spawnIndex = binReader.ReadByte();
                         status = binReader.ReadByte();

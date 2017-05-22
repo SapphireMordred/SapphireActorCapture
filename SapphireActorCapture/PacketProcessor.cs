@@ -119,6 +119,11 @@ namespace SapphireActorCapture
                         default:
                             Console.WriteLine($"    -> NPC({actorSpawnPacket.nameId}): {Globals.exdreader.GetBnpcName(actorSpawnPacket.nameId)}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
 
+                            if (actorSpawnPacket.fateId != 0)
+                            {
+                                Console.WriteLine($"    -> FATE NPC: {Globals.exdreader.GetFateName(actorSpawnPacket.fateId)}({actorSpawnPacket.fateId})");
+                            }
+
                             if (Globals.UI)
                             {
                                 Globals.mapviewform.BeginInvoke((MethodInvoker)delegate () {
@@ -126,6 +131,9 @@ namespace SapphireActorCapture
                                     Globals.mapviewform.invalidateMap();
                                 });
                             }
+
+                            //actorSpawnPacket.debugPrintUnknown();
+                            //File.WriteAllBytes(Path.Combine(outputFolderName, $"{subpacket.header.sourceId}.dat"), subpacket.data);
 
                             if (Globals.xmlOutput & currentZone != 0 & !actorSpawnPacket.invalidPacket)
                             {

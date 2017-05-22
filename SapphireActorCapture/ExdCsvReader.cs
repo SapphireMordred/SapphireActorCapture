@@ -13,6 +13,7 @@ namespace SapphireActorCapture
         private List<string> bnpcnames = new List<string>();
         private List<string> placenames = new List<string>();
         private List<string> actionnames = new List<string>();
+        private Dictionary<int, string> fatenames = new Dictionary<int, string>();
         private List<Territory> territories = new List<Territory>();
         private List<Map> maps = new List<Map>();
 
@@ -189,10 +190,47 @@ namespace SapphireActorCapture
                     }
                     Console.WriteLine($"ExdCsvReader: {rowCount} actionnames read");
                 }
+
+                using (TextFieldParser parser = new TextFieldParser(@"exd\fate.exh_de.csv"))
+                {
+                    parser.TextFieldType = FieldType.Delimited;
+                    parser.SetDelimiters(",");
+                    int rowCount = 0;
+                    while (!parser.EndOfData)
+                    {
+                        //Processing row
+                        rowCount++;
+                        string[] fields = parser.ReadFields();
+                        int fCount = 0;
+
+                        int index = 0;
+                        string name = "";
+                        foreach (string field in fields)
+                        {
+                            fCount++;
+
+                            if (fCount == 1)
+                            {
+                                int.TryParse(field, out index);
+                            }
+
+                            if (fCount == 26)
+                            {
+                                name = field;
+                            }
+                        }
+
+                        if (rowCount != 1)
+                        {
+                            fatenames.Add(index, name);
+                        }
+                    }
+                    Console.WriteLine($"ExdCsvReader: {rowCount} fatenames read");
+                }
             }
             catch(Exception exc)
             {
-                Console.WriteLine("ExdCsvReader: failed to parse CSV, continuing anyways\n"+exc);
+                Console.WriteLine("ExdCsvReader: failed to parse CSVs, continuing anyways\n"+exc);
             }
         }
 
@@ -327,7 +365,20 @@ namespace SapphireActorCapture
             }
             catch
             {
-                return "Unknown";
+                return "Unknown Action";
+            }
+        }
+
+        public string GetFateName(int id)
+        {
+            try
+            {
+                fatenames.TryGetValue(id, out string name);
+                return name;
+            }
+            catch
+            {
+                return "Unknown Fate";
             }
         }
     }
