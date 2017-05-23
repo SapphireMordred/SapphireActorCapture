@@ -36,6 +36,7 @@ namespace SapphireActorCapture
         { "dbuser=", "MySQL username, default: root",     v => Globals.dbuser = v },
         { "dbpwd=", "MySQL password, default: empty",     v => Globals.dbpwd = v },
         { "dbname=", "MySQL database name, default: sapphire",     v => Globals.dbname = v },
+        { "ooverride=", "Overrides the output directory, default: date and time of launch",     v => Globals.dbname = v },
         };
 
             List<string> extra;

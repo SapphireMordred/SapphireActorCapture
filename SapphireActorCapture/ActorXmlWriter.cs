@@ -40,7 +40,7 @@ namespace SapphireActorCapture
                 writer.WriteElementString("ZoneId", currentZone.ToString());
                 writer.WriteElementString("Type", actorSpawnPacket.type.ToString());
                 writer.WriteElementString("NameId", actorSpawnPacket.nameId.ToString());
-                writer.WriteElementString("SizeId", actorSpawnPacket.sizeId.ToString());
+                writer.WriteElementString("BnpcBaseId", actorSpawnPacket.bnpcBaseId.ToString());
                 writer.WriteElementString("ModelId", actorSpawnPacket.model.ToString());
                 writer.WriteElementString("FateId", actorSpawnPacket.fateId.ToString());
                 writer.WriteElementString("ClassJob", actorSpawnPacket.classJob.ToString());
@@ -90,7 +90,7 @@ namespace SapphireActorCapture
                 writer.WriteElementString("Name", actorSpawnPacket.name);
                 writer.WriteElementString("Title", actorSpawnPacket.title.ToString());
                 writer.WriteElementString("Icon", actorSpawnPacket.statusIcon.ToString());
-                writer.WriteElementString("SizeId", actorSpawnPacket.sizeId.ToString());
+                writer.WriteElementString("SizeId", actorSpawnPacket.bnpcBaseId.ToString());
                 writer.WriteElementString("ModelId", actorSpawnPacket.model.ToString());
                 writer.WriteElementString("ClassJob", actorSpawnPacket.classJob.ToString());
                 writer.WriteElementString("CurrentMount", actorSpawnPacket.currentMount.ToString());

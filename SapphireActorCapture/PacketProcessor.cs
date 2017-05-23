@@ -51,6 +51,11 @@ namespace SapphireActorCapture
 
                 outputFolderName = Path.Combine("output", datetime);
             }
+
+            if (Globals.outputOverride != "")
+            {
+                outputFolderName = Path.Combine("output", Globals.outputOverride);
+            }
         }
 
         public void ProcessPacket(BasePacket packet, PPType type)
@@ -165,8 +170,8 @@ namespace SapphireActorCapture
                                     parameters[2].Value = actorSpawnPacket.type;
                                     parameters.Add(new MySqlParameter("?NameId", MySqlDbType.Int32, 10));
                                     parameters[3].Value = actorSpawnPacket.nameId;
-                                    parameters.Add(new MySqlParameter("?SizeId", MySqlDbType.Int32, 10));
-                                    parameters[4].Value = actorSpawnPacket.sizeId;
+                                    parameters.Add(new MySqlParameter("?BnpcBaseId", MySqlDbType.Int32, 10));
+                                    parameters[4].Value = actorSpawnPacket.bnpcBaseId;
                                     parameters.Add(new MySqlParameter("?ModelId", MySqlDbType.Int32, 10));
                                     parameters[5].Value = actorSpawnPacket.model;
                                     parameters.Add(new MySqlParameter("?ClassJob", MySqlDbType.Int32, 3));

@@ -13,7 +13,7 @@ namespace SapphireActorCapture.Packets.Receive
 
         public readonly Int32 unknown_0;
         public readonly Int32 nameId;
-        public readonly Int32 sizeId;
+        public readonly Int32 bnpcBaseId;
         public readonly Int32[] unknown_C = new Int32[2];
         public readonly Int32 ownerId;
         public readonly Int32[] unknown_E = new Int32[2];
@@ -86,7 +86,7 @@ namespace SapphireActorCapture.Packets.Receive
                     {
                         unknown_0 = binReader.ReadInt32();
                         nameId = binReader.ReadInt32();
-                        sizeId = binReader.ReadInt32();
+                        bnpcBaseId = binReader.ReadInt32();
                         unknown_C[0] = binReader.ReadInt32();
                         unknown_C[1] = binReader.ReadInt32();
                         ownerId = binReader.ReadInt32();

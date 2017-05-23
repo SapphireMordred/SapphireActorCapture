@@ -14,6 +14,8 @@ namespace SapphireActorCapture
         public static string dbpwd = "";
         public static string dbname = "sapphire";
 
+        public static string outputOverride = "";
+
         public static bool DB = false;
         public static bool xmlOutput = false;
         public static bool writeChars = false;
