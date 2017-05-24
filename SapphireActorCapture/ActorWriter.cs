@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace SapphireActorCapture
 {
-    static class ActorXmlWriter
+    static class ActorWriter
     {
         public static void writeMob(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFolderName)
         {
@@ -179,6 +179,29 @@ namespace SapphireActorCapture
             }
 
             Console.WriteLine($"    -> updated {sourceId}.mobdef.xml");
+        }
+
+        public static void addCSVEntry(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFileName)
+        {
+            if (actorSpawnPacket.mobAgressive != 1 || actorSpawnPacket.fateId != 0)
+            {
+                Console.WriteLine($"    -> Mob is active, not writing");
+                return;
+            }
+
+            StringBuilder csv;
+            if (!File.Exists(outputFileName))
+            {
+                csv = new StringBuilder();
+                csv.AppendLine("SourceID,BnpcBaseID,BnpcNameID,Territory,PosX,PosY,PosZ,InfoString");
+                File.WriteAllText(outputFileName, csv.ToString());
+            }
+
+            csv = new StringBuilder(File.ReadAllText(outputFileName));
+            csv.AppendLine($"{sourceId},{actorSpawnPacket.bnpcBaseId},{actorSpawnPacket.nameId},{currentZone},\"{actorSpawnPacket.posx}\",\"{actorSpawnPacket.posy}\",\"{actorSpawnPacket.posz}\",\"{Globals.exdreader.GetBnpcName(actorSpawnPacket.nameId)} - {Globals.exdreader.GetTerritoryName(currentZone)}\"");
+            File.WriteAllText(outputFileName, csv.ToString());
+
+            Console.WriteLine($"    -> wrote {outputFileName}");
         }
     }
 }

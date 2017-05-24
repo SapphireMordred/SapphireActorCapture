@@ -68,7 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActorXmlWriter.cs" />
+    <Compile Include="ActorWriter.cs" />
     <Compile Include="ExdCsvReader.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Memory.cs" />

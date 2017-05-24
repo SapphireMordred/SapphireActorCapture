@@ -30,13 +30,15 @@ namespace SapphireActorCapture
             v => Globals.DB = v != null },
         { "x|xml", "Write to mobdef XMLs",
             v => Globals.xmlOutput = v != null },
+        { "t|table", "Write to CSV table",
+            v => Globals.csvOutput = v != null },
         { "h|help",  "Show this message and exit",
             v => show_help = v != null },
         { "dbhost=", "MySQL server to write actors into, default: localhost",     v => Globals.dbhost = v },
         { "dbuser=", "MySQL username, default: root",     v => Globals.dbuser = v },
         { "dbpwd=", "MySQL password, default: empty",     v => Globals.dbpwd = v },
         { "dbname=", "MySQL database name, default: sapphire",     v => Globals.dbname = v },
-        { "ooverride=", "Overrides the output directory, default: date and time of launch",     v => Globals.outputOverride = v },
+        { "ooverride=", "Overrides the output directory/filename, default: date and time of launch",     v => Globals.outputOverride = v },
         };
 
             List<string> extra;

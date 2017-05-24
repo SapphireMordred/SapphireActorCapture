@@ -24,6 +24,7 @@ namespace SapphireActorCapture
         private int currentZone = 0;
 
         private string outputFolderName;
+        private string outputKey;
 
         public PacketProcessor()
         {
@@ -33,28 +34,28 @@ namespace SapphireActorCapture
                 dbconnection = new MySqlConnection(connectionString);
                 dbconnection.Open();
                 Console.WriteLine("PacketProcessor: Connected to database, " + connectionString);
-            }         
+            }
 
+            outputKey = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
             if (Globals.xmlOutput)
             {
-                string datetime = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
-
                 try
                 {
-                    if (!Directory.Exists(Path.Combine("output", datetime)))
-                        Directory.CreateDirectory(Path.Combine("output", datetime));
+                    if (!Directory.Exists(Path.Combine("output", outputKey)))
+                        Directory.CreateDirectory(Path.Combine("output", outputKey));
                 }catch(Exception exc)
                 {
                     Console.WriteLine("Could not setup output folder!\n" + exc);
                     Environment.Exit(0);
                 }
 
-                outputFolderName = Path.Combine("output", datetime);
+                outputFolderName = Path.Combine("output", outputKey);
             }
 
             if (Globals.outputOverride != "")
             {
                 outputFolderName = Path.Combine("output", Globals.outputOverride);
+                outputKey = Globals.outputOverride;
             }
         }
 
@@ -114,7 +115,7 @@ namespace SapphireActorCapture
 
                                 if (Globals.xmlOutput & Globals.writeChars & currentZone != 0 & !actorSpawnPacket.invalidPacket)
                                 {
-                                    ActorXmlWriter.writeChar(actorSpawnPacket, subpacket.header.sourceId, currentZone, outputFolderName);
+                                    ActorWriter.writeChar(actorSpawnPacket, subpacket.header.sourceId, currentZone, outputFolderName);
                                 }
                                 else
                                 {
@@ -147,12 +148,17 @@ namespace SapphireActorCapture
 
                             if (Globals.xmlOutput & currentZone != 0 & !actorSpawnPacket.invalidPacket)
                             {
-                                ActorXmlWriter.writeMob(actorSpawnPacket, subpacket.header.sourceId, currentZone, outputFolderName);
+                                ActorWriter.writeMob(actorSpawnPacket, subpacket.header.sourceId, currentZone, outputFolderName);
                             }
                             else
                             {
                                 if (Globals.xmlOutput)
                                     Console.WriteLine($"    -> currentZone==0(change your zone once to fix) or invalid packet");
+                            }
+
+                            if (Globals.csvOutput)
+                            {
+                                ActorWriter.addCSVEntry(actorSpawnPacket, subpacket.header.sourceId, currentZone, Path.Combine("output", outputKey + ".csv"));
                             }
 
                             if (Globals.DB & currentZone != 0 & !actorSpawnPacket.invalidPacket)
@@ -248,7 +254,7 @@ namespace SapphireActorCapture
                     Console.WriteLine($"    -> ACTION: {Globals.exdreader.GetActionName((int)effectPacket.actionTextId)}   SourceId:{subpacket.header.sourceId}   TargetId:{subpacket.header.targetId}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
 
                     if (Globals.xmlOutput)
-                        ActorXmlWriter.addEffect(effectPacket, subpacket.header.sourceId, outputFolderName);
+                        ActorWriter.addEffect(effectPacket, subpacket.header.sourceId, outputFolderName);
 
                     break;
             }

@@ -18,6 +18,7 @@ namespace SapphireActorCapture
 
         public static bool DB = false;
         public static bool xmlOutput = false;
+        public static bool csvOutput = false;
         public static bool writeChars = false;
         public static bool UI = false;
         public static bool memory = false;
