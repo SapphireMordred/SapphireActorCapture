@@ -20,7 +20,7 @@ namespace SapphireActorCapture
                 return;
             }
 
-            if (actorSpawnPacket.mobAgressive != 1)
+            if ((actorSpawnPacket.displayFlags1 & 0x01) > 0)
             {
                 Console.WriteLine($"    -> Mob is active, not writing");
                 return;
@@ -72,7 +72,7 @@ namespace SapphireActorCapture
             }
         }
 
-        public static void writeChar(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFolderName) //TODO: actually make this write things related to characters
+        public static void writeChar(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFolderName)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -183,7 +183,7 @@ namespace SapphireActorCapture
 
         public static void addCSVEntry(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFileName)
         {
-            if (actorSpawnPacket.mobAgressive != 1 || actorSpawnPacket.fateId != 0)
+            if ((actorSpawnPacket.displayFlags1 & 0x01) > 0)
             {
                 Console.WriteLine($"    -> Mob is active, not writing");
                 return;
@@ -193,12 +193,13 @@ namespace SapphireActorCapture
             if (!File.Exists(outputFileName))
             {
                 csv = new StringBuilder();
-                csv.AppendLine("SourceID,BnpcBaseID,BnpcNameID,Territory,PosX,PosY,PosZ,InfoString");
+                csv.AppendLine("SourceID,BnpcBaseID,BnpcNameID,FateID,Level,MaxHP,MaxMP,MaxTP,Territory,PosX,PosY,PosZ,Rotation,InfoString");
                 File.WriteAllText(outputFileName, csv.ToString());
             }
 
             csv = new StringBuilder(File.ReadAllText(outputFileName));
-            csv.AppendLine($"{sourceId},{actorSpawnPacket.bnpcBaseId},{actorSpawnPacket.nameId},{currentZone},\"{actorSpawnPacket.posx}\",\"{actorSpawnPacket.posy}\",\"{actorSpawnPacket.posz}\",\"{Globals.exdreader.GetBnpcName(actorSpawnPacket.nameId)} - {Globals.exdreader.GetTerritoryName(currentZone)}\"");
+            csv.AppendLine($"{sourceId},{actorSpawnPacket.bnpcBaseId},{actorSpawnPacket.nameId},{currentZone},{actorSpawnPacket.fateId},{actorSpawnPacket.level},{actorSpawnPacket.hPMax},{actorSpawnPacket.mPMax},{actorSpawnPacket.tPMax},"
+                          + $"\"{actorSpawnPacket.posx}\",\"{actorSpawnPacket.posy}\",\"{actorSpawnPacket.posz}\",\"{actorSpawnPacket.rotation}\",\"{Globals.exdreader.GetBnpcName(actorSpawnPacket.nameId)} - {Globals.exdreader.GetTerritoryName(currentZone)}\"");
             File.WriteAllText(outputFileName, csv.ToString());
 
             Console.WriteLine($"    -> wrote {outputFileName}");
