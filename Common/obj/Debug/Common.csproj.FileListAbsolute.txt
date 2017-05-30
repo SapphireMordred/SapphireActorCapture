@@ -1,0 +1,6 @@
+J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\bin\Debug\Common.dll
+J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\bin\Debug\Common.pdb
+J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\bin\Debug\DotNetZip.dll
+J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\bin\Debug\DotNetZip.xml
+J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\obj\Debug\Common.dll
+J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\obj\Debug\Common.pdb

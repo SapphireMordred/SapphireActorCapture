@@ -193,12 +193,12 @@ namespace SapphireActorCapture
             if (!File.Exists(outputFileName))
             {
                 csv = new StringBuilder();
-                csv.AppendLine("SourceID,BnpcBaseID,BnpcNameID,FateID,Level,MaxHP,MaxMP,MaxTP,Territory,PosX,PosY,PosZ,Rotation,InfoString");
+                csv.AppendLine("SourceID,BnpcBaseID,BnpcNameID,ModelID,FateID,Level,MaxHP,MaxMP,MaxTP,Territory,PosX,PosY,PosZ,Rotation,InfoString");
                 File.WriteAllText(outputFileName, csv.ToString());
             }
 
             csv = new StringBuilder(File.ReadAllText(outputFileName));
-            csv.AppendLine($"{sourceId},{actorSpawnPacket.bnpcBaseId},{actorSpawnPacket.nameId},{currentZone},{actorSpawnPacket.fateId},{actorSpawnPacket.level},{actorSpawnPacket.hPMax},{actorSpawnPacket.mPMax},{actorSpawnPacket.tPMax},"
+            csv.AppendLine($"{sourceId},{actorSpawnPacket.bnpcBaseId},{actorSpawnPacket.nameId},{actorSpawnPacket.model},{actorSpawnPacket.fateId},{actorSpawnPacket.level},{actorSpawnPacket.hPMax},{actorSpawnPacket.mPMax},{actorSpawnPacket.tPMax},{currentZone},"
                           + $"\"{actorSpawnPacket.posx}\",\"{actorSpawnPacket.posy}\",\"{actorSpawnPacket.posz}\",\"{actorSpawnPacket.rotation}\",\"{Globals.exdreader.GetBnpcName(actorSpawnPacket.nameId)} - {Globals.exdreader.GetTerritoryName(currentZone)}\"");
             File.WriteAllText(outputFileName, csv.ToString());
 

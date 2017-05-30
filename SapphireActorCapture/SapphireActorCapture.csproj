@@ -86,12 +86,6 @@
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\Territory.cs" />
     <Compile Include="PacketProcessor.cs" />
-    <Compile Include="Packets\BasePacket.cs" />
-    <Compile Include="Packets\Receive\ActorSpawnPacket.cs" />
-    <Compile Include="Packets\Receive\EffectPacket.cs" />
-    <Compile Include="Packets\Receive\InitZonePacket.cs" />
-    <Compile Include="Packets\Send\UpdatePlayerPositionPacket.cs" />
-    <Compile Include="Packets\SubPacket.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -106,7 +100,6 @@
     <Compile Include="UI\MapViewForm.Designer.cs">
       <DependentUpon>MapViewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -142,6 +135,12 @@
     <EmbeddedResource Include="UI\MapViewForm.resx">
       <DependentUpon>MapViewForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{7848651e-5a0d-4ef3-a2ee-b1d9acd7de8f}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

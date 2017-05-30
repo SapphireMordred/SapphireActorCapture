@@ -36,6 +36,9 @@ namespace SapphireActorCapture
                 Console.WriteLine("PacketProcessor: Connected to database, " + connectionString);
             }
 
+            if (!Directory.Exists("output"))
+                Directory.CreateDirectory("output");
+
             outputKey = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
             if (Globals.xmlOutput)
             {
@@ -156,9 +159,21 @@ namespace SapphireActorCapture
                                     Console.WriteLine($"    -> currentZone==0(change your zone once to fix) or invalid packet");
                             }
 
-                            if (Globals.csvOutput)
+                            if (Globals.csvOutput & currentZone != 0 & !actorSpawnPacket.invalidPacket)
                             {
-                                ActorWriter.addCSVEntry(actorSpawnPacket, subpacket.header.sourceId, currentZone, Path.Combine("output", outputKey + ".csv"));
+                                try
+                                {
+                                    ActorWriter.addCSVEntry(actorSpawnPacket, subpacket.header.sourceId, currentZone, Path.Combine("output", outputKey + ".csv"));
+                                }catch(Exception exc)
+                                {
+                                    Console.WriteLine($"    -> " + exc);
+                                }
+                                
+                            }
+                            else
+                            {
+                                if (Globals.csvOutput)
+                                    Console.WriteLine($"    -> currentZone==0(change your zone once to fix) or invalid packet");
                             }
 
                             if (Globals.DB & currentZone != 0 & !actorSpawnPacket.invalidPacket)

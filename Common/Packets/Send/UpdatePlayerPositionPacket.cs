@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SapphireActorCapture.Packets.Send
 {
-    class UpdatePlayerPositionPacket
+    public class UpdatePlayerPositionPacket
     {
         bool invalidPacket = false;
 

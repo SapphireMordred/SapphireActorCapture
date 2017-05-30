@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SapphireActorCapture.Packets.Receive
 {
-    class InitZonePacket
+    public class InitZonePacket
     {
         public bool invalidPacket = false;
 

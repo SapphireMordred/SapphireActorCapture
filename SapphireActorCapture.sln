@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hook", "hook\hook.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SapphireActorCapture", "SapphireActorCapture\SapphireActorCapture.csproj", "{519557C7-E1C3-4729-BBA2-6F1D3B691F5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptGenerator", "ScriptGenerator\ScriptGenerator.csproj", "{E3D5EC64-F5D5-40A9-9821-711FFD503BEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{7848651E-5A0D-4EF3-A2EE-B1D9ACD7DE8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,14 @@ Global
 		{519557C7-E1C3-4729-BBA2-6F1D3B691F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{519557C7-E1C3-4729-BBA2-6F1D3B691F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{519557C7-E1C3-4729-BBA2-6F1D3B691F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3D5EC64-F5D5-40A9-9821-711FFD503BEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3D5EC64-F5D5-40A9-9821-711FFD503BEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3D5EC64-F5D5-40A9-9821-711FFD503BEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3D5EC64-F5D5-40A9-9821-711FFD503BEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7848651E-5A0D-4EF3-A2EE-B1D9ACD7DE8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7848651E-5A0D-4EF3-A2EE-B1D9ACD7DE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7848651E-5A0D-4EF3-A2EE-B1D9ACD7DE8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7848651E-5A0D-4EF3-A2EE-B1D9ACD7DE8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
