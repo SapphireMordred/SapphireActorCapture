@@ -86,11 +86,12 @@ namespace SapphireActorCapture
 
         private void HandleRecv(SubPacket subpacket)
         {
+            //Console.WriteLine("\n-> " + subpacket.gameMessage.opcode.ToString("X"));
             switch (subpacket.gameMessage.opcode)
             {
                 /* SERVER OPCODES */
-
-                case 0x190: /* ACTOR_SPAWN */
+                
+                case 0x111: /* ACTOR_SPAWN */
                     if (Globals.memory)
                     {
                         currentZone = Memory.getZoneId();
@@ -105,7 +106,7 @@ namespace SapphireActorCapture
                             if (actorSpawnPacket.spawnIndex == 0)
                             {
                                 Console.WriteLine($"    -> OWN CHARACTER: {actorSpawnPacket.name}   Zone:{currentZone}   EntryLength:{subpacket.data.Length}");
-                                System.Threading.Thread.Sleep(100);
+                                //System.Threading.Thread.Sleep(100);
 
                                 /* replaced with init_zone
                                 currentZone = Memory.ReadZoneId();
@@ -197,10 +198,8 @@ namespace SapphireActorCapture
                                     parameters[5].Value = actorSpawnPacket.model;
                                     parameters.Add(new MySqlParameter("?ClassJob", MySqlDbType.Int32, 3));
                                     parameters[parameters.Count - 1].Value = actorSpawnPacket.classJob;
-                                    parameters.Add(new MySqlParameter("?DisplayFlags1", MySqlDbType.Int32, 3));
-                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.displayFlags1;
-                                    parameters.Add(new MySqlParameter("?DisplayFlags2", MySqlDbType.Int32, 3));
-                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.displayFlags2;
+                                    parameters.Add(new MySqlParameter("?DisplayFlags", MySqlDbType.Int32, 3));
+                                    parameters[parameters.Count - 1].Value = actorSpawnPacket.displayFlags;
                                     parameters.Add(new MySqlParameter("?Level", MySqlDbType.Int32, 3));
                                     parameters[parameters.Count - 1].Value = actorSpawnPacket.level;
                                     parameters.Add(new MySqlParameter("?Pos_0_0", MySqlDbType.Float));

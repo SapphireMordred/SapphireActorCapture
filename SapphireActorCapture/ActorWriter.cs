@@ -20,7 +20,7 @@ namespace SapphireActorCapture
                 return;
             }
 
-            if ((actorSpawnPacket.displayFlags1 & 0x01) > 0)
+            if ((actorSpawnPacket.displayFlags & 0x01) > 0)
             {
                 Console.WriteLine($"    -> Mob is active, not writing");
                 return;
@@ -44,8 +44,7 @@ namespace SapphireActorCapture
                 writer.WriteElementString("ModelId", actorSpawnPacket.model.ToString());
                 writer.WriteElementString("FateId", actorSpawnPacket.fateId.ToString());
                 writer.WriteElementString("ClassJob", actorSpawnPacket.classJob.ToString());
-                writer.WriteElementString("DisplayFlags1", actorSpawnPacket.displayFlags1.ToString());
-                writer.WriteElementString("DisplayFlags2", actorSpawnPacket.displayFlags2.ToString());
+                writer.WriteElementString("DisplayFlags", actorSpawnPacket.displayFlags.ToString());
                 writer.WriteElementString("Level", actorSpawnPacket.level.ToString());
                 writer.WriteElementString("MaxHP", actorSpawnPacket.hPMax.ToString());
                 writer.WriteElementString("MaxMP", actorSpawnPacket.mPMax.ToString());
@@ -98,8 +97,7 @@ namespace SapphireActorCapture
                 writer.WriteElementString("MountColor", actorSpawnPacket.mountColor.ToString());
                 writer.WriteElementString("MountFeet", actorSpawnPacket.mountFeet.ToString());
                 writer.WriteElementString("MountHead", actorSpawnPacket.mountHead.ToString());
-                writer.WriteElementString("DisplayFlags1", actorSpawnPacket.displayFlags1.ToString());
-                writer.WriteElementString("DisplayFlags2", actorSpawnPacket.displayFlags2.ToString());
+                writer.WriteElementString("DisplayFlags", actorSpawnPacket.displayFlags.ToString());
                 writer.WriteElementString("Level", actorSpawnPacket.level.ToString());
                 writer.WriteElementString("MaxHP", actorSpawnPacket.hPMax.ToString());
                 writer.WriteElementString("MaxMP", actorSpawnPacket.mPMax.ToString());
@@ -183,7 +181,7 @@ namespace SapphireActorCapture
 
         public static void addCSVEntry(ActorSpawnPacket actorSpawnPacket, uint sourceId, int currentZone, string outputFileName)
         {
-            if ((actorSpawnPacket.displayFlags1 & 0x01) > 0)
+            if ((actorSpawnPacket.displayFlags & 0x01) > 0)
             {
                 Console.WriteLine($"    -> Mob is active, not writing");
                 return;

@@ -26,6 +26,7 @@ namespace SapphireActorCapture.Packets.Receive
         public readonly Byte mobAgressive;
         public readonly Byte mobType;
         public readonly Byte type;
+        public readonly Byte subtype;
         public readonly Byte unknown_33;
         public readonly Int32 unknown_34;
         public readonly Int64 unknown_38;
@@ -52,8 +53,7 @@ namespace SapphireActorCapture.Packets.Receive
         public readonly byte[] unknown_B0 = new byte[17];
         public readonly Byte persistantPose;
         public readonly Byte unknown_C0;
-        public readonly Byte displayFlags1;
-        public readonly Byte displayFlags2;
+        public readonly Int32 displayFlags;
         public readonly Int16 unknown_C1;
         public readonly byte[] statusEffects = new byte[360];
         public readonly Byte currentMount;
@@ -84,8 +84,81 @@ namespace SapphireActorCapture.Packets.Receive
                 {
                     try
                     {
-                        unknown_0 = binReader.ReadInt32();
+                        title = binReader.ReadInt16();
+                        binReader.ReadInt16();
+                        binReader.ReadInt16();
+                        binReader.ReadInt16();
+
+                        pose = binReader.ReadByte();
+                        binReader.ReadByte();
+                        binReader.ReadByte();
+                        binReader.ReadByte();
+
+                        binReader.ReadInt32();
+
+                        targetId = binReader.ReadInt64();
+                        binReader.ReadInt32();
+                        binReader.ReadInt32();
+
+                        mainWeaponModel = binReader.ReadInt64();
+                        secWeaponModel = binReader.ReadInt64();
+                        craftToolModel = binReader.ReadInt64();
+
+                        binReader.ReadInt32();
+                        binReader.ReadInt32();
+                        bnpcBaseId = binReader.ReadInt32();
                         nameId = binReader.ReadInt32();
+                        binReader.ReadInt32();
+                        binReader.ReadInt32();
+                        binReader.ReadInt32();
+                        binReader.ReadInt32();
+                        binReader.ReadInt32();
+
+                        hPCurr = binReader.ReadInt32();
+                        hPMax = binReader.ReadInt32();
+                        displayFlags = binReader.ReadInt32();
+                        fateId = binReader.ReadInt16();
+                        mPCurr = binReader.ReadInt16();
+                        tPCurr = binReader.ReadInt16();
+                        mPMax = binReader.ReadInt16();
+
+                        binReader.ReadInt16();
+                        model = binReader.ReadInt16();
+                        rotation = binReader.ReadInt16();
+                        binReader.ReadInt16();
+                        spawnIndex = binReader.ReadByte();
+                        status = binReader.ReadByte();
+                        binReader.ReadByte();
+                        type = binReader.ReadByte();
+                        subtype = binReader.ReadByte();
+                        binReader.ReadByte();
+                        binReader.ReadInt16();
+
+                        statusIcon = binReader.ReadByte();
+                        level = binReader.ReadByte();
+                        classJob = binReader.ReadByte();
+                        binReader.ReadByte();
+
+                        binReader.ReadInt16();
+
+                        currentMount = binReader.ReadByte();
+                        mountHead = binReader.ReadByte();
+                        mountBody = binReader.ReadByte();
+                        mountFeet = binReader.ReadByte();
+                        mountColor = binReader.ReadInt16();
+
+                        binReader.ReadInt32();
+                        statusEffects = binReader.ReadBytes(360);
+                        posx = binReader.ReadSingle();
+                        posy = binReader.ReadSingle();
+                        posz = binReader.ReadSingle();
+                        models = binReader.ReadBytes(40);
+                        name = Encoding.ASCII.GetString(binReader.ReadBytes(32)).TrimEnd('\x00');
+                        lookdata = binReader.ReadBytes(28);
+                        fcTag = Encoding.ASCII.GetString(binReader.ReadBytes(6)).TrimEnd('\x00');
+                        //binReader.ReadInt32();
+
+                        /*
                         bnpcBaseId = binReader.ReadInt32();
                         unknown_C[0] = binReader.ReadInt32();
                         unknown_C[1] = binReader.ReadInt32();
@@ -146,6 +219,7 @@ namespace SapphireActorCapture.Packets.Receive
                         fcTag = Encoding.ASCII.GetString(binReader.ReadBytes(6)).TrimEnd('\x00');
                         unknown_250 = binReader.ReadBytes(10);
                         binReader.ReadBytes(22); //?
+                        */
                     }
                     catch (Exception exc)
                     {
