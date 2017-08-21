@@ -4,3 +4,10 @@ J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\bin\Debug\DotN
 J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\bin\Debug\DotNetZip.xml
 J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\obj\Debug\Common.dll
 J:\Sapphire\lobby-rewrite\Sapphire2\src\Tools\ActorCapture\Common\obj\Debug\Common.pdb
+J:\Sapphire\SapphireActorCapture\Common\bin\Debug\Common.dll
+J:\Sapphire\SapphireActorCapture\Common\bin\Debug\Common.pdb
+J:\Sapphire\SapphireActorCapture\Common\bin\Debug\DotNetZip.dll
+J:\Sapphire\SapphireActorCapture\Common\bin\Debug\DotNetZip.xml
+J:\Sapphire\SapphireActorCapture\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+J:\Sapphire\SapphireActorCapture\Common\obj\Debug\Common.dll
+J:\Sapphire\SapphireActorCapture\Common\obj\Debug\Common.pdb

@@ -46,7 +46,7 @@ namespace SapphireActorCapture
                 Console.WriteLine($"ExdCsvReader: {rowCount} bnpc names read");
             }
 
-            using (TextFieldParser parser = new TextFieldParser(@"exd\placename_0.exh_en.csv"))
+            using (TextFieldParser parser = new TextFieldParser(@"exd\placename.exh_en.csv"))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
@@ -167,7 +167,7 @@ namespace SapphireActorCapture
                     Console.WriteLine($"ExdCsvReader: {rowCount} maps read");
                 }
 
-                using (TextFieldParser parser = new TextFieldParser(@"exd\action_0.exh_en.csv"))
+                using (TextFieldParser parser = new TextFieldParser(@"exd\action.exh_en.csv"))
                 {
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
